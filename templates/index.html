@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pneumonia Detection</title>
+
+    <style>
+        /* Basic styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container styling */
+        .container {
+            width: 90%;
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2d3e50;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            text-align: center;
+            font-size: 16px;
+            color: #4b4b4b;
+            margin-bottom: 30px;
+        }
+
+        /* Form styling */
+        input[type="file"] {
+            display: none;
+        }
+
+        .custom-file-upload {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #5cb85c;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .custom-file-upload:hover {
+            background-color: #4cae4c;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        /* Result box styling */
+        .result-box {
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            text-align: center;
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* Loading spinner styling */
+        .loader {
+            display: none;
+            margin: 20px auto;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1.5s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Media query for responsiveness */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 28px;
+            }
+
+            .custom-file-upload {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+
+            input[type="submit"] {
+                padding: 10px 20px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MRS Pneumonia Detection from X-ray</h1>
+        <p>Upload a chest X-ray image to detect whether it's <strong>Normal</strong> or <strong>Viral Pneumonia</strong>.</p>
+
+        <!-- File upload form -->
+        <form method="post" enctype="multipart/form-data">
+            <input type="file" name="file" id="fileInput" required>
+            <label for="fileInput" class="custom-file-upload">Choose File</label>
+            <input type="submit" value="Predict" class="btn">
+        </form>
+
+        <!-- Loading spinner -->
+        <div class="loader" id="loader"></div>
+
+        <!-- Result box -->
+        {% if result %}
+            <div id="resultBox" class="result-box">
+                <h2>Prediction Result</h2>
+                <p>{{ result }}</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Show loader when the form is submitted
+        const form = document.querySelector("form");
+        const loader = document.getElementById("loader");
+
+        form.addEventListener("submit", function() {
+            loader.style.display = "block";  // Show the loader
+        });
+
+        // Change the background color based on result
+        window.onload = function() {
+            const result = "{{ result }}"; // Get the result from the server
+
+            const resultBox = document.getElementById("resultBox");
+
+            if (result === "Viral Pneumonia") {
+                resultBox.style.backgroundColor = "#e74c3c";  // Red for pneumonia
+            } else if (result === "Normal") {
+                resultBox.style.backgroundColor = "#2ecc71";  // Green for normal
+            }
+        };
+    </script>
+</body>
+</html>
